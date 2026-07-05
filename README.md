@@ -6,17 +6,6 @@ Gurobi then solves this model by selecting a set of feasible connections that co
 The data comes from the Bureau of Transportation Statistics, U.S. Department of Transportation. The dataset contains Southwest Airlines flight records for January 2026.
 
 The main columns used in the model are:
-TAIL_NUM              Original aircraft tail number in the dataset
-OP_CARRIER_FL_NUM     Airline flight number
-ORIGIN                Departure airport
-DEST                  Arrival airport
-CRS_DEP_TIME          Scheduled departure time
-CRS_ARR_TIME          Scheduled arrival time
-CRS_ELAPSED_TIME      Scheduled elapsed flight time
-DISTANCE              Flight distance
-CANCELLED             Cancellation indicator
-FL_DATE               Flight date
-
 | Column | Description |
 |---|---|
 | `FL_DATE` | Flight date |
@@ -29,3 +18,7 @@ FL_DATE               Flight date
 | `CRS_ELAPSED_TIME` | Scheduled elapsed flight time in minutes |
 | `DISTANCE` | Flight distance in miles |
 | `CANCELLED` | Cancellation indicator |
+
+After filtering, the model uses:
+2359 non-cancelled Southwest flights
+24 overnight flights (included but treated as terminal flights for the day)
