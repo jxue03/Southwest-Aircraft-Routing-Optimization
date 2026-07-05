@@ -22,64 +22,35 @@ After filtering, the model uses:
 - 2359 non-cancelled Southwest flights including 24 overnight flights (but treated as terminal flights for the day).
 
 ## Integer Programming Model
-The model is formulated as a minimum path cover problem on a directed flight network.
-The decision variables are:
-x[i,j] = 1 if flight j is operated immediately after flight i by the same aircraft
-x[i,j] = 0 otherwise
-and:
-start[i] = 1 if flight i is the first flight of an aircraft route
-start[i] = 0 otherwise
-The objective is to minimize the number of aircraft used. Since each aircraft route has exactly one first flight, minimizing the number of route starts is equivalent to minimizing the number of aircraft:
-Minimize sum(start[i])
-The first major constraint ensures that every flight is either the first flight of an aircraft route or has exactly one predecessor flight:
-start[i] + sum(x[j,i]) = 1
-This guarantees that every flight is covered exactly once.
-The second major constraint ensures that each flight has at most one successor:
-sum(x[i,j]) <= 1
-This prevents one aircraft from splitting into multiple routes.
+The model is formulated as a minimum path cover problem on a directed flight network. The list `edges` stores all feasible aircraft connections between flights. Each edge is represented as `(i, j, wait_time)`, where flight `j` can be operated after flight `i` by the same aircraft.
 
-
-## Integer Programming Formulation
-
-The aircraft assignment problem is formulated as a binary integer programming model on a directed flight-connection network. Let `F` denote the set of non-cancelled flights in the selected operating day. Each flight `i` in `F` is represented as a node, and a directed arc `(i, j)` is created when aircraft continuity between flight `i` and flight `j` is operationally feasible. The set of all feasible arcs is denoted by `A`.
-
-A feasible connection must satisfy airport continuity and turnaround feasibility. Specifically, an arc `(i, j)` is included in `A` only if the destination airport of flight `i` matches the origin airport of flight `j`, and the scheduled departure time of flight `j` occurs at least `MIN_TURN` minutes after the scheduled arrival time of flight `i`:
+A feasible edge is created only when the destination airport of flight `i` matches the origin airport of flight `j`, and the available ground time is at least the required minimum turnaround time:
 
 DEST_i = ORIGIN_j
 DEP_j - ARR_i >= MIN_TURN
 
-Overnight flights are treated as terminal flights within the one-day planning horizon, so no outgoing arcs are generated from those flights.
+Overnight flights are treated as terminal flights in the one-day model, so no outgoing edges are created from those flights.
+The model uses two sets of binary decision variables. For each feasible edge (i, j) in edges, the variable x[i,j] indicates whether that connection is selected:
+x[i,j] = 1 if flight j is assigned immediately after flight i on the same aircraft
+x[i,j] = 0 otherwise
 
-For each feasible arc (i, j) in A, define the binary decision variable:
+For each flight i, the variable start[i] indicates whether flight i begins a new aircraft route:
+start[i] = 1 if flight i starts a new aircraft route
+start[i] = 0 otherwise
 
-x_ij = 1 if flight j is assigned immediately after flight i on the same aircraft
-x_ij = 0 otherwise
+The objective is to minimize the number of aircraft required. Since each aircraft route has one starting flight, minimizing the total number of route starts minimizes the required aircraft count:
+minimize sum(start[i] for all flights i)
 
-For each flight i in F, define another binary variable
+Each flight must either start a new aircraft route or have exactly one selected predecessor flight:
+start[i] + sum(x[j,i] for all feasible predecessor flights j) = 1
+This ensures that every flight is covered exactly once.
 
-s_i = 1 if flight i starts a new aircraft route
-s_i = 0 otherwise
+Each flight can have at most one selected successor flight:
+sum(x[i,j] for all feasible successor flights j) <= 1
+This prevents one aircraft from being assigned to multiple next flights.
 
-The objective is to minimize the number of aircraft required to operate the schedule. Since each aircraft route has exactly one starting flight, minimizing the total number of route starts is equivalent to minimizing the required fleet size:
+Together, these constraints form aircraft routes through the feasible connection network. After optimization, the selected x[i,j] variables are used to reconstruct each aircraft route, and the number of selected start[i] variables gives the minimum number of aircraft required under the stated assumptions.
 
-minimize sum(s_i) for all i in F
-
-Each flight must either begin a new aircraft route or be assigned exactly one predecessor flight:
-
-s_i + sum(x_ji for all j such that (j, i) is in A) = 1
-for all i in F
-
-This constraint ensures that every flight is covered exactly once. In addition, each flight can be followed by at most one successor flight:
-
-sum(x_ij for all j such that (i, j) is in A) <= 1
-for all i in F
-
-This prevents a single aircraft route from branching into multiple subsequent flights. Finally, all decision variables are binary:
-
-x_ij in {0, 1} for all (i, j) in A
-s_i in {0, 1} for all i in F
-
-Under this formulation, the selected arcs form a collection of aircraft routes that collectively cover all flights. The optimized objective value gives the minimum number of aircraft required under the assumptions of fixed schedules, identical aircraft, airport continuity, minimum turnaround time, and terminal treatment of overnight flights.
 
 ## Results
 The optimization was solved using Gurobi with a time limit of 10 seconds and a MIP gap of 0. For each turnaround-time scenario, Gurobi found an optimal solution with a 0.0000% optimality gap.
