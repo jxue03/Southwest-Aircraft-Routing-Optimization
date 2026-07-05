@@ -1,5 +1,5 @@
 # Southwest-Aircraft-Routing-Optimization
-A network flow-based integer programming model was built to estimate the minimum fleet size required to operate a fixed schedule of Southwest Airlines flights on a selected day (1/25/2026). A connection is feasible when the destination airport of one flight matches the origin airport of another flight and the available ground time satisfies the minimum turnaround requirement.
+A network flow-based integer programming model was formulated to estimate the minimum fleet size required to operate the scheduled Southwest Airlines flights on January 25, 2026. A connection is feasible when the destination airport of one flight matches the origin airport of another flight and the available ground time satisfies the minimum turnaround requirement.
 Gurobi then solves this model by selecting a set of feasible connections that covers every non-cancelled flight while minimizing the number of aircraft route starts, which corresponds to the minimum number of aircraft required under the assumptions.
 
 ## Dataset
@@ -19,7 +19,8 @@ The data comes from the Bureau of Transportation Statistics, U.S. Department of 
 | `CANCELLED` | Cancellation indicator |
 
 After filtering, the model uses:
-- 2359 non-cancelled Southwest flights including 24 overnight flights (but treated as terminal flights for the day).
+- 2359 non-cancelled Southwest flights including 24 overnight flights.
+
 
 ## Integer Programming Model
 The model is formulated as a minimum path cover problem on a directed flight network. The list `edges` stores all feasible aircraft connections between flights. Each edge is represented as `(i, j, wait_time)`, where flight `j` can be operated after flight `i` by the same aircraft.
