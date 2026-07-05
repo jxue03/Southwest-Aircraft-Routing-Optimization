@@ -40,20 +40,11 @@ def load_flights():
     flights["DEP_MIN"] = flights["CRS_DEP_TIME"].apply(time_to_minutes)
     flights["ARR_MIN"] = flights["CRS_ARR_TIME"].apply(time_to_minutes)
 
-    # For this one-day model, these flights are treated as end-of-day flights:
-    # they can have a predecessor, but cannot have a successor.
+    # For this one-day model, overnight flight can have a predecessor, but not a successor.
     flights["IS_OVERNIGHT"] = (
         (flights["DEP_MIN"] >= 17 * 60)
         & (flights["ARR_MIN"] <= 8 * 60)
     )
-
-   
-    # if "CRS_DEP_TIME" + "CRS_ELAPSED_TIME" > 24 * 60
-        # then use z = ("CRS_DEP_TIME" + "CRS_ELAPSED_TIME") - 24*60
-        # then use w = "CRS_ARR_TIME" - z 
-    # else:
-        # ignore
-    # if "CRS_ARR_TIME" - "CRS_ELAPSED_TIME" - w < 0, the it is red eye
 
     # sorting by the earliest departure first; 
     # if departure time ties, earlier arrival first; 
