@@ -19,5 +19,5 @@ The data comes from the Bureau of Transportation Statistics, U.S. Department of 
 | `CANCELLED` | Cancellation indicator |
 
 After filtering, the model uses:
-* 2359 non-cancelled Southwest flights//
-* 24 overnight flights (included but treated as terminal flights for the day)//
+- 2359 non-cancelled Southwest flights 
+* 24 overnight flights (included but treated as terminal flights for the day)
