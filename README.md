@@ -16,3 +16,16 @@ CRS_ELAPSED_TIME      Scheduled elapsed flight time
 DISTANCE              Flight distance
 CANCELLED             Cancellation indicator
 FL_DATE               Flight date
+
+| Column | Description |
+|---|---|
+| `FL_DATE` | Flight date |
+| `TAIL_NUM` | Aircraft tail number used in the original dataset |
+| `OP_CARRIER_FL_NUM` | Southwest flight number |
+| `ORIGIN` | Departure airport |
+| `DEST` | Arrival airport |
+| `CRS_DEP_TIME` | Scheduled departure time |
+| `CRS_ARR_TIME` | Scheduled arrival time |
+| `CRS_ELAPSED_TIME` | Scheduled elapsed flight time in minutes |
+| `DISTANCE` | Flight distance in miles |
+| `CANCELLED` | Cancellation indicator |
