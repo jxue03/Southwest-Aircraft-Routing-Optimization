@@ -19,5 +19,22 @@ The data comes from the Bureau of Transportation Statistics, U.S. Department of 
 | `CANCELLED` | Cancellation indicator |
 
 After filtering, the model uses:
-- 2359 non-cancelled Southwest flights 
-* 24 overnight flights (included but treated as terminal flights for the day)
+- 2359 non-cancelled Southwest flights including 24 overnight flights (but treated as terminal flights for the day).
+
+## Integer Programming Model
+The model is formulated as a minimum path cover problem on a directed flight network.
+The decision variables are:
+x[i,j] = 1 if flight j is operated immediately after flight i by the same aircraft
+x[i,j] = 0 otherwise
+and:
+start[i] = 1 if flight i is the first flight of an aircraft route
+start[i] = 0 otherwise
+The objective is to minimize the number of aircraft used. Since each aircraft route has exactly one first flight, minimizing the number of route starts is equivalent to minimizing the number of aircraft:
+Minimize sum(start[i])
+The first major constraint ensures that every flight is either the first flight of an aircraft route or has exactly one predecessor flight:
+start[i] + sum(x[j,i]) = 1
+This guarantees that every flight is covered exactly once.
+The second major constraint ensures that each flight has at most one successor:
+sum(x[i,j]) <= 1
+This prevents one aircraft from splitting into multiple routes.
+
