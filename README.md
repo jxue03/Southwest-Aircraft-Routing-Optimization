@@ -41,67 +41,43 @@ This prevents one aircraft from splitting into multiple routes.
 
 ## Integer Programming Formulation
 
-The aircraft assignment problem is formulated as a binary integer programming model on a directed flight-connection network. Let \(F\) denote the set of non-cancelled flights in the selected operating day. Each flight \(i \in F\) is represented as a node, and a directed arc \((i,j)\) is created when aircraft continuity between flight \(i\) and flight \(j\) is operationally feasible. The set of all feasible arcs is denoted by \(A\).
+The aircraft assignment problem is formulated as a binary integer programming model on a directed flight-connection network. Let `F` denote the set of non-cancelled flights in the selected operating day. Each flight `i` in `F` is represented as a node, and a directed arc `(i, j)` is created when aircraft continuity between flight `i` and flight `j` is operationally feasible. The set of all feasible arcs is denoted by `A`.
 
-A feasible connection must satisfy airport continuity and turnaround feasibility. Specifically, an arc \((i,j)\) is included in \(A\) only if the destination airport of flight \(i\) matches the origin airport of flight \(j\), and the scheduled departure time of flight \(j\) occurs at least `MIN_TURN` minutes after the scheduled arrival time of flight \(i\):
+A feasible connection must satisfy airport continuity and turnaround feasibility. Specifically, an arc `(i, j)` is included in `A` only if the destination airport of flight `i` matches the origin airport of flight `j`, and the scheduled departure time of flight `j` occurs at least `MIN_TURN` minutes after the scheduled arrival time of flight `i`:
 
-\[
 DEST_i = ORIGIN_j
-\]
-
-\[
-DEP_j - ARR_i \geq MIN\_TURN
-\]
+DEP_j - ARR_i >= MIN_TURN
 
 Overnight flights are treated as terminal flights within the one-day planning horizon, so no outgoing arcs are generated from those flights.
 
-For each feasible arc \((i,j) \in A\), define the binary decision variable
+For each feasible arc (i, j) in A, define the binary decision variable:
 
-\[
-x_{ij} =
-\begin{cases}
-1, & \text{if flight } j \text{ is assigned immediately after flight } i \text{ on the same aircraft} \\
-0, & \text{otherwise}
-\end{cases}
-\]
+x_ij = 1 if flight j is assigned immediately after flight i on the same aircraft
+x_ij = 0 otherwise
 
-For each flight \(i \in F\), define another binary variable
+For each flight i in F, define another binary variable
 
-\[
-s_i =
-\begin{cases}
-1, & \text{if flight } i \text{ starts a new aircraft route} \\
-0, & \text{otherwise}
-\end{cases}
-\]
+s_i = 1 if flight i starts a new aircraft route
+s_i = 0 otherwise
 
 The objective is to minimize the number of aircraft required to operate the schedule. Since each aircraft route has exactly one starting flight, minimizing the total number of route starts is equivalent to minimizing the required fleet size:
 
-\[
-\min \sum_{i \in F} s_i
-\]
+minimize sum(s_i) for all i in F
 
 Each flight must either begin a new aircraft route or be assigned exactly one predecessor flight:
 
-\[
-s_i + \sum_{j:(j,i)\in A} x_{ji} = 1 \qquad \forall i \in F
-\]
+s_i + sum(x_ji for all j such that (j, i) is in A) = 1
+for all i in F
 
 This constraint ensures that every flight is covered exactly once. In addition, each flight can be followed by at most one successor flight:
 
-\[
-\sum_{j:(i,j)\in A} x_{ij} \leq 1 \qquad \forall i \in F
-\]
+sum(x_ij for all j such that (i, j) is in A) <= 1
+for all i in F
 
 This prevents a single aircraft route from branching into multiple subsequent flights. Finally, all decision variables are binary:
 
-\[
-x_{ij} \in \{0,1\} \qquad \forall (i,j)\in A
-\]
-
-\[
-s_i \in \{0,1\} \qquad \forall i \in F
-\]
+x_ij in {0, 1} for all (i, j) in A
+s_i in {0, 1} for all i in F
 
 Under this formulation, the selected arcs form a collection of aircraft routes that collectively cover all flights. The optimized objective value gives the minimum number of aircraft required under the assumptions of fixed schedules, identical aircraft, airport continuity, minimum turnaround time, and terminal treatment of overnight flights.
 
