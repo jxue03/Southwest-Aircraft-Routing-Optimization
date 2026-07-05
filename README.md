@@ -1,5 +1,6 @@
 # Southwest-Aircraft-Routing-Optimization
-A network flow-based integer programming model was formulated to estimate the minimum fleet size required to operate the scheduled Southwest Airlines flights on January 25, 2026. A connection is feasible when the destination airport of one flight matches the origin airport of another flight and the available ground time satisfies the minimum turnaround requirement.
+A network flow-based integer programming model was formulated to estimate the minimum fleet size required to operate the scheduled Southwest Airlines flights on January 25, 2026. A connection is feasible when the destination airport of one flight matches the origin airport of another flight and the available ground time satisfies the minimum turnaround requirement.  
+
 Gurobi then solves this model by selecting a set of feasible connections that covers every non-cancelled flight while minimizing the number of aircraft route starts, which corresponds to the minimum number of aircraft required under the assumptions.
 
 ## Dataset
