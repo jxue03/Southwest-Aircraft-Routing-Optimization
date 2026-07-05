@@ -55,7 +55,7 @@ Together, these constraints form aircraft routes through the feasible connection
 
 
 ## Results
-The optimization was solved using Gurobi with a time limit of 10 seconds and a MIP gap of 0. For each turnaround-time scenario, Gurobi found an optimal solution with a 0.0000% optimality gap.
+Gurobi internallly solves the LP relaxation using dual simplex, with a time limit of 10 seconds and a MIP gap of 0. For each turnaround-time scenario, Gurobi found an optimal solution with a 0.0000% optimality gap.
 
 | Minimum Turnaround Time | Feasible Connection Pairs | Optimized Aircraft Required | Selected Connections | Aircraft Saved vs. Actual | Percent Reduction |
 |---:|---:|---:|---:|---:|---:|
@@ -63,9 +63,9 @@ The optimization was solved using Gurobi with a time limit of 10 seconds and a M
 | 40 minutes | 79,923 | 589 | 1,770 | 50 | 7.8% |
 | 45 minutes | 78,349 | 623 | 1,736 | 16 | 2.5% |
 
-The results show that the minimum aircraft requirement increases as the turnaround-time requirement becomes stricter. 
-
 This pattern is expected because longer turnaround requirements reduce the number of feasible flight connections. As fewer flight pairs can be connected, more aircraft route starts are needed to cover all flights. Even under the most conservative tested assumption of 45 minutes, the optimized fleet size remains below the actual number of aircraft observed in the data, which is 639.
 
 Overall, the results suggest that the January 25 schedule contains substantial connection flexibility under the model assumptions. The optimized aircraft count should be interpreted as a theoretical minimum fleet requirement for the selected day, rather than a direct replacement for Southwest's actual aircraft assignment, since the model does not include crew scheduling, maintenance, aircraft capacity, gate availability, or multi-day positioning constraints.
+
+## Limitation
 
