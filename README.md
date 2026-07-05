@@ -38,3 +38,18 @@ The second major constraint ensures that each flight has at most one successor:
 sum(x[i,j]) <= 1
 This prevents one aircraft from splitting into multiple routes.
 
+## Results
+The optimization was solved using Gurobi with a time limit of 10 seconds and a MIP gap of 0. For each turnaround-time scenario, Gurobi found an optimal solution with a 0.0000% optimality gap.
+
+| Minimum Turnaround Time | Feasible Connection Pairs | Optimized Aircraft Required | Selected Connections | Aircraft Saved vs. Actual | Percent Reduction |
+|---:|---:|---:|---:|---:|---:|
+| 35 minutes | 80,981 | 552 | 1,807 | 87 | 13.6% |
+| 40 minutes | 79,923 | 589 | 1,770 | 50 | 7.8% |
+| 45 minutes | 78,349 | 623 | 1,736 | 16 | 2.5% |
+
+The results show that the minimum aircraft requirement increases as the turnaround-time requirement becomes stricter. With a 35-minute minimum turn, the model requires 552 aircraft, which is 87 fewer than the 639 actual tail numbers observed in the dataset. When the minimum turn time increases to 40 minutes, the optimized aircraft requirement rises to 589. With a 45-minute turn, the model requires 623 aircraft.
+
+This pattern is expected because longer turnaround requirements reduce the number of feasible flight connections. As fewer flight pairs can be connected, more aircraft route starts are needed to cover all flights. Even under the most conservative tested assumption of 45 minutes, the optimized fleet size remains below the actual number of aircraft observed in the data.
+
+Overall, the results suggest that the January 25 schedule contains substantial connection flexibility under the model assumptions. The optimized aircraft count should be interpreted as a theoretical minimum fleet requirement for the selected day, rather than a direct replacement for Southwest's actual aircraft assignment, since the model does not include crew scheduling, maintenance, aircraft capacity, gate availability, or multi-day positioning constraints.
+
