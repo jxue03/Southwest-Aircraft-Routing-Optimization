@@ -5,7 +5,6 @@ Gurobi then solves this model by selecting a set of feasible connections that co
 ## Dataset
 The data comes from the Bureau of Transportation Statistics, U.S. Department of Transportation. The dataset contains Southwest Airlines flight records for January 2026.
 
-The main columns used in the model are:
 | Column | Description |
 |---|---|
 | `FL_DATE` | Flight date |
@@ -20,5 +19,5 @@ The main columns used in the model are:
 | `CANCELLED` | Cancellation indicator |
 
 After filtering, the model uses:
-2359 non-cancelled Southwest flights
-24 overnight flights (included but treated as terminal flights for the day)
+* 2359 non-cancelled Southwest flights//
+* 24 overnight flights (included but treated as terminal flights for the day)//
