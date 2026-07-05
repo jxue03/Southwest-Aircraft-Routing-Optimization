@@ -24,30 +24,30 @@ After filtering, the model uses:
 ## Integer Programming Model
 The model is formulated as a minimum path cover problem on a directed flight network. The list `edges` stores all feasible aircraft connections between flights. Each edge is represented as `(i, j, wait_time)`, where flight `j` can be operated after flight `i` by the same aircraft.
 
-A feasible edge is created only when the destination airport of flight `i` matches the origin airport of flight `j`, and the available ground time is at least the required minimum turnaround time:
+A feasible edge is created only when the destination airport of flight `i` matches the origin airport of flight `j`, and the available ground time is at least the required minimum turnaround time:   
 
-DEST_i = ORIGIN_j
-DEP_j - ARR_i >= MIN_TURN
+DEST_i = ORIGIN_j   
+DEP_j - ARR_i >= MIN_TURN   
 
-Overnight flights are treated as terminal flights in the one-day model, so no outgoing edges are created from those flights.
-The model uses two sets of binary decision variables. For each feasible edge (i, j) in edges, the variable x[i,j] indicates whether that connection is selected:
-x[i,j] = 1 if flight j is assigned immediately after flight i on the same aircraft
-x[i,j] = 0 otherwise
+Overnight flights are treated as terminal flights in the one-day model, so no outgoing edges are created from those flights.   
+The model uses two sets of binary decision variables. For each feasible edge (i, j) in edges, the variable x[i,j] indicates whether that connection is selected:   
+x[i,j] = 1 if flight j is assigned immediately after flight i on the same aircraft   
+x[i,j] = 0 otherwise   
 
-For each flight i, the variable start[i] indicates whether flight i begins a new aircraft route:
-start[i] = 1 if flight i starts a new aircraft route
-start[i] = 0 otherwise
+For each flight i, the variable start[i] indicates whether flight i begins a new aircraft route:   
+start[i] = 1 if flight i starts a new aircraft route   
+start[i] = 0 otherwise   
 
-The objective is to minimize the number of aircraft required. Since each aircraft route has one starting flight, minimizing the total number of route starts minimizes the required aircraft count:
-minimize sum(start[i] for all flights i)
+The objective is to minimize the number of aircraft required. Since each aircraft route has one starting flight, minimizing the total number of route starts minimizes the required aircraft count:   
+minimize sum(start[i] for all flights i)   
 
-Each flight must either start a new aircraft route or have exactly one selected predecessor flight:
-start[i] + sum(x[j,i] for all feasible predecessor flights j) = 1
-This ensures that every flight is covered exactly once.
+Each flight must either start a new aircraft route or have exactly one selected predecessor flight:   
+start[i] + sum(x[j,i] for all feasible predecessor flights j) = 1   
+This ensures that every flight is covered exactly once.   
 
-Each flight can have at most one selected successor flight:
-sum(x[i,j] for all feasible successor flights j) <= 1
-This prevents one aircraft from being assigned to multiple next flights.
+Each flight can have at most one selected successor flight:   
+sum(x[i,j] for all feasible successor flights j) <= 1   
+This prevents one aircraft from being assigned to multiple next flights.   
 
 Together, these constraints form aircraft routes through the feasible connection network. After optimization, the selected x[i,j] variables are used to reconstruct each aircraft route, and the number of selected start[i] variables gives the minimum number of aircraft required under the stated assumptions.
 
