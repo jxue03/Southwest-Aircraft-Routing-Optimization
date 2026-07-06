@@ -65,7 +65,7 @@ Gurobi internallly solves the LP relaxation using dual simplex, with a time limi
 
 This pattern is expected because longer turnaround requirements reduce the number of feasible flight connections. As fewer flight pairs can be connected, more aircraft route starts are needed to cover all flights. Even under the most conservative tested assumption of 45 minutes, the optimized fleet size still remains below the actual number of aircraft observed in the data, which is 639.
 
-Improving fleet utilization allows an airline to operate a fixed flight schedule with fewer aircraft, which can reduce the amount of capital tied up in expensive physical assets. Using aircraft more efficiently can lower ownership or leasing costs, parking and storage costs, insurance costs, and some maintenance overhead.    
+Improving fleet utilization allows an airline to operate a fixed flight schedule with fewer aircraft, which can reduce the amount of capital tied up in expensive physical assets, lower ownership or leasing costs, parking and storage costs, insurance costs, and some maintenance overhead.    
 
 In this project, minimizing the number of aircraft provides a theoretical lower bound on fleet requirements and highlights how routing decisions can improve aircraft productivity under fixed schedule and turnaround-time assumptions. It is not a direct replacement for Southwest's actual aircraft assignment, since the dataset does not include crew scheduling, maintenance, aircraft capacity, gate availability, or multi-day positioning constraints.
 
